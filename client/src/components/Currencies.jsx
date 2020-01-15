@@ -1,13 +1,33 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
+import { Mutation } from "react-apollo";
+import { gql } from "apollo-boost";
+import { useMutation } from '@apollo/react-hooks';
 
 import { Container, Button, Table } from "react-bootstrap";
-import FormCurrency from "./FormCurrency";
+import ModalForm from "./FormCurrency/ModalForm";
+
+const DELETE_MUTATION = gql`
+  mutation DeleteMutation($id: Int!) {
+    deleteGasto(id: $id)
+  }
+`;
 
 const Currencies = props => {
   const [show, setShow] = useState(false);
 
+  const [deleteC, { data }] = useMutation(DELETE_MUTATION);
+
+  const deleteCurrency = id => {
+    deleteC({ variables: { id }});
+    refreshPage()
+  }
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const refreshPage = () => {
+    window.location.reload();
+  };
 
   const { loading, allGastos } = props.data;
 
@@ -15,7 +35,11 @@ const Currencies = props => {
 
   return (
     <Container className="mt-5">
-      <FormCurrency show={show} handleClose={handleClose} />
+      <ModalForm
+        action="Create"
+        show={show}
+        handleClose={handleClose}
+      />
       <Button style={{ float: "left" }} className="mb-3" onClick={handleShow}>
         Add new currency
       </Button>
@@ -31,6 +55,7 @@ const Currencies = props => {
         </thead>
         <tbody>
           {allGastos?.map(gasto => {
+            let id = parseInt(gasto.id)
             return (
               <tr key={gasto.id}>
                 <td>{gasto.id}</td>
@@ -40,8 +65,10 @@ const Currencies = props => {
                 <td>
                   <Button variant="primary" className="mr-2">
                     Update
+                  </Button> 
+                  <Button variant="danger" onClick={deleteCurrency(id)}>
+                    Delete
                   </Button>
-                  <Button variant="danger">Delete</Button>
                 </td>
               </tr>
             );

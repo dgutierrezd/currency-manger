@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Mutation } from "react-apollo";
 import { gql } from "apollo-boost";
-import { useMutation } from '@apollo/react-hooks';
 
 import { Container, Button, Table } from "react-bootstrap";
 import ModalForm from "./FormCurrency/ModalForm";
@@ -14,13 +13,6 @@ const DELETE_MUTATION = gql`
 
 const Currencies = props => {
   const [show, setShow] = useState(false);
-
-  const [deleteC, { data }] = useMutation(DELETE_MUTATION);
-
-  const deleteCurrency = id => {
-    deleteC({ variables: { id }});
-    refreshPage()
-  }
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -39,6 +31,7 @@ const Currencies = props => {
         action="Create"
         show={show}
         handleClose={handleClose}
+        refresh={refreshPage}
       />
       <Button style={{ float: "left" }} className="mb-3" onClick={handleShow}>
         Add new currency
@@ -65,10 +58,14 @@ const Currencies = props => {
                 <td>
                   <Button variant="primary" className="mr-2">
                     Update
-                  </Button> 
-                  <Button variant="danger" onClick={deleteCurrency(id)}>
-                    Delete
                   </Button>
+                  <Mutation mutation={DELETE_MUTATION} variables={{ id }}>
+                    {deleteMutation => (
+                      <Button variant="danger" onClick={deleteMutation}>
+                        Delete
+                      </Button>
+                    )}
+                  </Mutation>
                 </td>
               </tr>
             );

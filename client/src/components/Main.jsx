@@ -1,6 +1,4 @@
 import React from 'react';
-import { gql } from 'apollo-boost';
-import { graphql, Query } from 'react-apollo';
 
 import { Container } from 'react-bootstrap';
 import Currencies from './Currencies';

@@ -3,7 +3,7 @@ const Sequelize = require('sequelize');
 const sequelize = new Sequelize(
     'project_shoe',
     'root',
-    't5xsm+kt8A',
+    'Daniel020900',
     {
         host: 'localhost',
         dialect: 'mysql'
@@ -17,5 +17,3 @@ const db = {
 db.sequelize = sequelize;
 
 module.exports = db;
-
-export default db;

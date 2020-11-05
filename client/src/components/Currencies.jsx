@@ -1,89 +1,93 @@
 import React, { useState, useEffect } from "react";
-import { Mutation, Query } from "react-apollo";
-import { gql } from "apollo-boost";
+import { useMutation, useQuery } from "@apollo/react-hooks";
 
 import { Container, Button, Table } from "react-bootstrap";
 import ModalForm from "./FormCurrency/ModalForm";
+import { GET_CURRENCIES } from "../graphql/Queries";
+import { DELETE_MUTATION } from "../graphql/Mutations";
 
-const DELETE_MUTATION = gql`
-  mutation DeleteMutation($id: Int!) {
-    deleteGasto(id: $id)
-  }
-`;
+import { AiOutlinePlus } from "react-icons/ai";
+import { BsTrash } from "react-icons/bs";
+import { BiEdit } from "react-icons/bi";
 
-const getCurrencies = gql`
-  {
-    allGastos {
-      id
-      name
-      valor
-      type
-    }
-  }
-`;
-
-const Currencies = props => {
+const Currencies = (props) => {
   const [show, setShow] = useState(false);
+  const [currencies, setCurrencies] = useState([]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const refreshPage = () => {
-    window.location.reload();
+  const { loading, error, data } = useQuery(GET_CURRENCIES);
+
+  useEffect(() => {
+    setCurrencies(data?.allGastos);
+  }, [data]);
+
+  const [deleteCurrency] = useMutation(DELETE_MUTATION, {
+    refetchQueries: [{ query: GET_CURRENCIES }],
+    awaitRefetchQueries: true,
+  });
+
+  const deleteItem = async (id) => {
+    let { data } = await deleteCurrency({ variables: { id } });
+    console.log(data);
   };
 
   return (
-    <Query query={getCurrencies}>
-      {({ data }) => (
+    <Container>
       <Container className="mt-5">
-        <ModalForm
-          action="Create"
-          show={show}
-          handleClose={handleClose}
-          refresh={refreshPage}
-        />
+        <ModalForm action="Create" show={show} handleClose={handleClose} />
         <Button style={{ float: "left" }} className="mb-3" onClick={handleShow}>
-          Add new currency
+          <AiOutlinePlus size={20} color="#ffff" />
         </Button>
-        <Table striped bordered hover variant="dark">
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Name</th>
-              <th>Value</th>
-              <th>Type</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data?.allGastos.map(gasto => {
-              let id = parseInt(gasto.id);
-              return (
-                <tr key={gasto.id}>
-                  <td>{gasto.id}</td>
-                  <td>{gasto.name}</td>
-                  <td>{gasto.valor}</td>
-                  <td>{gasto.type}</td>
-                  <td>
-                    <Button variant="primary" className="mr-2">
-                      Update
-                    </Button>
-                    <Mutation mutation={DELETE_MUTATION} variables={{ id }}>
-                      {deleteMutation => (
-                        <Button variant="danger" onClick={deleteMutation}>
-                          Delete
-                        </Button>
-                      )}
-                    </Mutation>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
+        {currencies?.length > 0 ? (
+          <Table striped bordered hover variant="dark">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Value</th>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currencies?.map((gasto) => {
+                let id = parseInt(gasto.id);
+                return (
+                  <tr key={gasto.id}>
+                    <td>{gasto.name}</td>
+                    <td>{gasto.valor}</td>
+                    <td>{gasto.type}</td>
+                    <td>{gasto.date}</td>
+                    <td>
+                      <ModalForm
+                        action="Edit"
+                        show={show}
+                        gastoId={id}
+                        handleClose={handleClose}
+                      />
+                      <Button
+                        variant="primary"
+                        className="mr-2"
+                        onClick={() => handleShow()}
+                      >
+                        <BiEdit size={20} />
+                      </Button>
+                      <Button variant="danger" onClick={() => deleteItem(id)}>
+                        <BsTrash size={20} />
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+        ) : (
+          <h3>No hay gastos registrados</h3>
+        )}
       </Container>
-      )}
-    </Query>
+    </Container>
   );
 };
 

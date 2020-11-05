@@ -1,11 +1,11 @@
 const Sequelize = require('sequelize');
 
 const sequelize = new Sequelize(
-    'project_shoe',
-    'root',
-    'Daniel020900',
+    'clpx8mopmk4f727o',
+    't2200459g38bbmvj',
+    'uodo9xjm93bnxgwl',
     {
-        host: 'localhost',
+        host: 'gzp0u91edhmxszwf.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
         dialect: 'mysql'
     }
 );

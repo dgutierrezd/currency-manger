@@ -1,5 +1,6 @@
 const express = require("express");
 const { ApolloServer, gql } = require("apollo-server-express");
+const path = require('path');
 const cors = require('cors');
 
 const typeDefs = require('./schema') ;

@@ -24,6 +24,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "faker": "^4.1.0",
+    "graphql": "^14.7.0",
     "graphql-server-express": "^1.4.1",
     "graphql-tools": "^4.0.6",
     "lodash": "^4.17.20",
@@ -34,7 +35,6 @@
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-preset-latest": "^6.24.1",
-    "graphql": "^14.7.0",
     "nodemon": "^1.19.4"
   }
 }

@@ -12,6 +12,8 @@ module.exports = gql`
     type Query {
         allGastos: [Gasto]
         getGasto(id: Int!): Gasto
+        getEgresses: [Gasto]
+        getEntries: [Gasto]
     }
 
     type Mutation {

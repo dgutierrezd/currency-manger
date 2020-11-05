@@ -8,7 +8,6 @@ import { DELETE_MUTATION } from "../graphql/Mutations";
 
 import { AiOutlinePlus } from "react-icons/ai";
 import { BsTrash } from "react-icons/bs";
-import { BiEdit } from "react-icons/bi";
 
 const Currencies = (props) => {
   const [show, setShow] = useState(false);
@@ -61,19 +60,6 @@ const Currencies = (props) => {
                     <td>{gasto.type}</td>
                     <td>{gasto.date}</td>
                     <td>
-                      <ModalForm
-                        action="Edit"
-                        show={show}
-                        gastoId={id}
-                        handleClose={handleClose}
-                      />
-                      <Button
-                        variant="primary"
-                        className="mr-2"
-                        onClick={() => handleShow()}
-                      >
-                        <BiEdit size={20} />
-                      </Button>
                       <Button variant="danger" onClick={() => deleteItem(id)}>
                         <BsTrash size={20} />
                       </Button>

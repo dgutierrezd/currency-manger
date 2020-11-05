@@ -10,7 +10,7 @@ const ModalForm = props => {
         <Modal.Header closeButton>
           <Modal.Title>{props.action} currency</Modal.Title>
         </Modal.Header>
-        <FormCurrency gastoId={props.gastoId} handleClose={props.handleClose} />
+        <FormCurrency handleClose={props.handleClose} />
       </Modal>
     </Container>
   );

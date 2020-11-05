@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Container, Modal, Form } from "react-bootstrap";
 
-import { useMutation, useQuery } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
-import { GET_CURRENCIES, GET_CURRENCY } from "../../graphql/Queries";
+import { GET_CURRENCIES } from "../../graphql/Queries";
 
 const ADD_CURRENCY = gql`
   mutation AddCurrency(
@@ -23,20 +23,10 @@ const ADD_CURRENCY = gql`
 `;
 
 const FormCurrency = (props) => {
-  const { gastoId } = props;
-
-  const { loading, dataCurrency } = useQuery(GET_CURRENCY, {
-    variables: { id: parseInt(gastoId) },
-  });
-
-  useEffect(() => {
-    console.log(gastoId);
-  }, [gastoId]);
-
-  const [name, setName] = useState(dataCurrency?.name ? dataCurrency.name : "");
-  const [value, setValue] = useState(dataCurrency?.valor ? dataCurrency.valor : 0);
-  const [date, setDate] = useState(dataCurrency?.date ? dataCurrency.date : "");
-  const [type, setType] = useState(dataCurrency?.type ? dataCurrency.type : "");
+  const [name, setName] = useState("");
+  const [value, setValue] = useState(0);
+  const [date, setDate] = useState("");
+  const [type, setType] = useState("");
 
   const [addCurrency, { data }] = useMutation(ADD_CURRENCY, {
     refetchQueries: [{ query: GET_CURRENCIES }],
